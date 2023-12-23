@@ -1,67 +1,50 @@
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
-import { useEffect, useState } from "react";
-import { useAtom } from "jotai";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { atomIsAuthenticate, atomToken, atomUser } from '../../hooks/atomState';
+import { axiosPOST } from '../../hooks/axiosMethods';
 import AuthCardLayout from './Layout/AuthCardLayout';
 import Input from '../../compoents/Input';
 import Button from '../../compoents/Button';
 import AuthCardFooter from './Layout/AuthCardFooter';
-import { axiosPOST } from '../../hooks/axiosMethods';
-import { setOnLocalStorage } from '../../hooks/helpers';
 
 const loginSchema = Yup.object().shape({
-    password: Yup.string().required("password is required"),
+    name: Yup.string().required("Name is required"),
+    password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
     email: Yup.string().email("Invalid email").required("Email is required"),
 });
 
-const Login = () => {
-
-    // global
-    const navigate = useNavigate();
+const Signup = () => {
 
     // hooks
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(loginSchema),
         defaultValues: {
+            name: '',
             email: '',
             password: ''
         },
     });
 
     // states
-    const [token, setToken] = useAtom(atomToken);
     const [loading, setLoading] = useState(false);
-    const [isAuthenticate, setIsAuthenticate] = useAtom(atomIsAuthenticate);
-    const [user, setUser] = useAtom(atomUser);
     const [showPassword, setShowPassword] = useState(false);
 
-    // if token redirect
-    useEffect(() => {
-        if (isAuthenticate && token && user) {
-            navigate('/dashboard')
-        }
-    }, [navigate, isAuthenticate, token, user])
-
-    // login action
-    const handleLogin = async (getData) => {
-
+    // signup action
+    const handleSignup = async (data) => {
         try {
             // getting data
-            const getPOST = await axiosPOST('auth/signin', getData, setLoading);
+            const getPOST = await axiosPOST('auth/signup', data, setLoading);
 
             // if success
             if (getPOST.success) {
-                setToken(getPOST.data.accessToken);
-                setUser(getPOST.data.user);
-                setIsAuthenticate(true);
-
-                setOnLocalStorage('token', getPOST.data.accessToken);
+                reset();
+                toast.success(getPOST.message);
             }
+
         } catch (error) {
+
             setLoading(false);
             toast.error(`${error.response.data.message}`);
         }
@@ -69,9 +52,26 @@ const Login = () => {
 
     return (
         <AuthCardLayout>
-            <form onSubmit={handleSubmit(handleLogin)}>
+            <form onSubmit={handleSubmit(handleSignup)}>
                 <div className="divide-y divide-gray-200">
                     <div className="pt-8 text-base leading-6 space-y-3 text-gray-700 sm:text-lg sm:leading-7">
+
+                        <Controller
+                            name="name"
+                            control={control}
+                            render={({ field }) => (
+                                <Input
+                                    label="Name"
+                                    id="name"
+                                    type="text"
+                                    placeholder="Soumik Ahammed"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    error={errors.name?.message}
+                                    labelRequired
+                                />
+                            )}
+                        />
 
                         <Controller
                             name="email"
@@ -114,10 +114,10 @@ const Login = () => {
 
                     <div className="mt-6">
                         <Button
-                            text='Login'
+                            text='Create Account'
                             css='w-full'
                             isLoading={loading}
-                            loadingText='Loging in'
+                            loadingText='Creating'
                         />
                     </div>
 
@@ -125,13 +125,12 @@ const Login = () => {
             </form>
 
             <AuthCardFooter
-                text={`Don't have account?`}
-                url='/signup'
-                linkText='Create account'
+                text={`Have account?`}
+                url='/login'
+                linkText='Login Here'
             />
         </AuthCardLayout>
-
     )
 }
 
-export default Login
+export default Signup

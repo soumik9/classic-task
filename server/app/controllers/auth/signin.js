@@ -14,7 +14,7 @@ const signin = catchAsync(
 
         // find user
         const user = await User.findOne({ email: req.body.email }).lean();
-        if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'Information mismatched!');
+        if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not exists!');
 
         // checking is valid password
         const isValidPassword = await bcrypt.compareSync(req.body.password, user.password);
