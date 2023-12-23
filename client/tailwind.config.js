@@ -49,6 +49,15 @@ export default {
         bronze: "#AD8A56",
       },
     },
+    screens: {
+      xs: "375px",
+      sm: "480px",
+      md: "768px",
+      lg: "1024px",
+      xll: "1440px",
+
+      "3xl": "1920px",
+    },
   },
   plugins: [],
 }

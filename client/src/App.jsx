@@ -6,6 +6,10 @@ import Signup from './views/Auth/Signup';
 import Dashboard from './views/Dashboard/Dashboard';
 import RequireAuth from './compoents/RequiredAuth';
 import useAuthCheck from './hooks/useAuthCheck';
+import Home from './views/Home/Home';
+import Layout from './compoents/LandignLayout/Layout';
+import Product from './views/Product/Product';
+import ProductDetails from './views/Product/ProductDetails';
 
 function App() {
 
@@ -18,7 +22,18 @@ function App() {
   return (
     <>
       <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
+
+        <Route path="/" element={<Layout>
+          <Home />
+        </Layout>} />
+
+        <Route path="/product" element={<Layout>
+          <Product />
+        </Layout>} />
+
+        <Route path="/product/:productId" element={<Layout>
+          <ProductDetails />
+        </Layout>} />
 
 
         <Route path="/signup" element={<Signup />} />

@@ -7,7 +7,7 @@ const Button = ({ type, loadingText, isLoading, text, variant, variantColor, upp
     <button
       type={type ? type : "submit"}
       className={cx(
-        "!transition !ease-in-out !duration-500 text-white !py-2.5 !font-medium !bg-primary-600 hover:!bg-primary disabled:!bg-primary-300 disabled:!text-gray-300 rounded-lg",
+        "!transition !ease-in-out !duration-500 text-white !py-2.5 !font-medium !bg-primary-600 hover:!bg-primary disabled:!bg-primary-300 disabled:!text-white rounded-lg",
 
         variant === "outlined" && "!bg-transparent hover:!bg-primary-600 hover:!text-white !border-primary hover:!border-primary-300 !text-primary",
 
