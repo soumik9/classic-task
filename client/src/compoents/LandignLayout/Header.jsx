@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AiOutlineBars, AiOutlineClose } from "react-icons/ai";
 import { navLinks } from "../../constants/constant";
 import { useAtom } from "jotai";
-import { atomIsAuthenticate } from "../../hooks/atomState";
+import { atomIsAuthenticate, atomUser } from "../../hooks/atomState";
 import DeskNavItem from "./partials/DeskNavItem";
 import { FiShoppingCart } from "react-icons/fi";
 import MobileNavItem from "./partials/MobileNavItem";
@@ -11,6 +11,7 @@ import MobileNavItem from "./partials/MobileNavItem";
 const Header = () => {
 
     // global
+    const [user] = useAtom(atomUser);
     const [isAuthenticate] = useAtom(atomIsAuthenticate);
 
     // states
@@ -27,11 +28,16 @@ const Header = () => {
             <ul className="list-none sm:flex gap-x-7 hidden justify-end items-center flex-1">
                 <DeskNavItem items={isAuthenticate ? navLinks.slice(0, 2) : navLinks} />
 
-                {isAuthenticate ? <li>
-                    <Link to='/dashboard'>
-                        <FiShoppingCart className="font-normal cursor-pointer text-white text-[22px] hover:text-dark-primary-200" />
-                    </Link>
-                </li> : null}
+                {isAuthenticate ? <>
+                    <li>
+                        <Link to='/dashboard'>
+                            <FiShoppingCart className="font-normal cursor-pointer text-white text-[22px] hover:text-dark-primary-200" />
+                        </Link>
+                    </li>
+                    <li className="text-white">
+                        ({user.name})
+                    </li>
+                </> : null}
             </ul>
 
             {/* Mobile Navigation */}
@@ -49,11 +55,16 @@ const Header = () => {
                         <MobileNavItem
                             items={isAuthenticate ? navLinks.slice(0, 2) : navLinks}
                         />
-                        {isAuthenticate ? <li>
-                            <Link to='/dashboard'>
-                                <FiShoppingCart className="font-normal cursor-pointer text-white text-[22px] hover:text-dark-primary-200" />
-                            </Link>
-                        </li> : null}
+                        {isAuthenticate ? <>
+                            <li>
+                                <Link to='/dashboard'>
+                                    <FiShoppingCart className="font-normal cursor-pointer text-white text-[22px] hover:text-dark-primary-200" />
+                                </Link>
+                            </li>
+                            <li className="text-white">
+                                ({user.name})
+                            </li>
+                        </> : null}
                     </ul>
                 </div>
             </div>

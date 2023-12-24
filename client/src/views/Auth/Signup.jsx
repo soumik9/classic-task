@@ -44,7 +44,6 @@ const Signup = () => {
             }
 
         } catch (error) {
-
             setLoading(false);
             toast.error(`${error.response.data.message}`);
         }

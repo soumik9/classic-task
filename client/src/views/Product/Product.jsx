@@ -21,12 +21,12 @@ const Product = () => {
     return (
         <div className="container mt-10">
             <div className="grid xll:grid-cols-4 gap-5">
-                {data.map((item) => (
+                {data.length ? data.map((item) => (
                     <ProductCard
                         {...item}
                         key={item._id}
                     />
-                ))}
+                )) : 'no data'}
             </div>
         </div>
     )
